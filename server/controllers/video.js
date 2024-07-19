@@ -56,3 +56,48 @@ export const getVideo = async (req, res, next) => {
     next(error);
   }
 };
+
+export const addView = async (req, res, next) => {
+  try {
+    const video = await Video.findByIdAndUpdate(req.params.id);
+    if (!video) return next(createError(404, "Invalid Video"));
+    Video.findByIdAndUpdate(req.params.id, {
+      $inc: { views: 1 },
+    });
+    req.send(200).json("View Increased");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const randomVideos = async (req, res, next) => {
+  try {
+    const videos = await Video.aggregate([{ $sample: { size: 40 } }]);
+    res.status(200).send(videos);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const trendVideos = async (req, res, next) => {
+  try {
+    const videos = await Video.find().sort({ views: -1 });
+    res.status(200).json(videos);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const subsVideos = async (req, res, next) => {
+  try {
+    const users = await User.findById(req.user.id);
+    const subscribedChannels = User.subscribedUsers;
+    const list = Promise.all(
+      subscribedChannels.map((channelId) => {
+        return video.find({ userId: channelId });
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
