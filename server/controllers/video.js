@@ -7,7 +7,7 @@ export const addVideo = async (req, res, next) => {
     const savedVidoe = await newVideo.save();
     res.status(200).json(savedVidoe);
   } catch (error) {
-    next(err);
+    next(error);
   }
 };
 export const updateVideo = async (req, res, next) => {
@@ -92,11 +92,36 @@ export const subsVideos = async (req, res, next) => {
   try {
     const users = await User.findById(req.user.id);
     const subscribedChannels = User.subscribedUsers;
-    const list = Promise.all(
+    const list = await Promise.all(
       subscribedChannels.map((channelId) => {
         return video.find({ userId: channelId });
       })
     );
+    res.status(200).json(list.flat().sort((a, b) => b.createdAt - a.createdAt));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getByTag = async (req, res, next) => {
+  const tags = req.query.tags.split(",");
+  console.log(tags);
+  try {
+    const videos = await Video.find({ tags: { $in: tags } }).limit(20);
+    res.status(200).json(videos);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const search = async (req, res, next) => {
+  const tags = req.query.q;
+  console.log(tags);
+  try {
+    const videos = await Video.find({
+      title: { $regex: query, $options: "i" },
+    }).limit(40);
+    res.status(200).json(videos);
   } catch (error) {
     next(error);
   }
