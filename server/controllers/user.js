@@ -70,5 +70,34 @@ export const unsubscibe = async (req, res, next) => {
     next(error);
   }
 };
-export const like = async (req, res, next) => {};
-export const dislike = async (req, res, next) => {};
+export const like = async (req, res, next) => {
+  const id = req.user.id;
+  const videoId = req.params.videoId;
+
+  try {
+    await Video.findByIdAndUpdate(videoId, {
+      // addToSet will not add in the value if it already exists in the array
+      $addToSet: { likes: id },
+      $pull: { dislikes: id },
+    });
+    res.status(200).json("Video Liked");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const dislike = async (req, res, next) => {
+  const id = req.user.id;
+  const videoId = req.params.videoId;
+
+  try {
+    await Video.findByIdAndUpdate(videoId, {
+      // addToSet will not add in the value if it already exists in the array
+      $addToSet: { dislikes: id },
+      $pull: { likes: id },
+    });
+    res.status(200).json("Video Liked");
+  } catch (error) {
+    next(error);
+  }
+};
