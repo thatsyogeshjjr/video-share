@@ -39,7 +39,7 @@ export const getUser = async (req, res, next) => {
     res.status(200).json(user);
     res.send(user);
   } catch (error) {
-    next(createError(500, err));
+    next(createError(500, error));
   }
 };
 
