@@ -79,7 +79,7 @@ const SignIn = () => {
     try {
       const res = await axios.post("/auth/signin", { name, password });
       console.log(res.data);
-      dispatch(loginSuccess());
+      dispatch(loginSuccess(res.data));
     } catch (error) {
       dispatch(loginFailure(error));
     }
