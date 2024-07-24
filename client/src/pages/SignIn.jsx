@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { loginStart, loginSuccess } from "../redux/userSlice";
+import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 
 const Container = styled.div`
   display: flex;
@@ -80,7 +80,9 @@ const SignIn = () => {
       const res = await axios.post("/auth/signin", { name, password });
       console.log(res.data);
       dispatch(loginSuccess());
-    } catch (error) {}
+    } catch (error) {
+      dispatch(loginFailure(error));
+    }
   };
 
   return (
