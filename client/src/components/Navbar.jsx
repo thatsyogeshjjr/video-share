@@ -54,6 +54,21 @@ const Button = styled.button`
   align-items: center;
   gap: 5px;
 `;
+
+const User = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color:#aaa;
+  color" ${(theme) => theme.text}`;
+
+const Avatar = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #999;
+`;
 const Navbar = () => {
   const { currentUser } = useSelector((state) => state.user);
   return (
@@ -64,7 +79,11 @@ const Navbar = () => {
           <SearchOutlinedIcon />
         </Search>
         {currentUser ? (
-          "user"
+          <User>
+            {/* <VideoCallOutlinedIcon /> */}
+            <Avatar />
+            {currentUser.name}
+          </User>
         ) : (
           <Link to="signin" style={{ textDecoration: "none" }}>
             <Button>
