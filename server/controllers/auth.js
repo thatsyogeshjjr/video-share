@@ -39,30 +39,26 @@ export const signin = async (req, res, next) => {
 
 export const googleAuth = async (req, res, next) => {
   try {
-    console.log(req.body);
     const user = await User.findOne({ email: req.body.email });
     if (user) {
-      console.log("User exists");
       const token = jwt.sign({ id: user._id }, process.env.JWT_KEY);
-      console.log("token done");
+
       res
         .cookie("access_token", token, { httpOnly: true })
         .status(200)
         .json(user._doc);
-      console.log("cookie sent");
     } else {
       const newUser = new User({ ...req.body, fromGoogle: true });
-      console.log("user new");
+
       const savedUser = await newUser.save();
-      console.log("user saved");
+
       const token = jwt.sign({ id: savedUser._id }, process.env.JWT_KEY);
-      console.log("token done");
+
       res
         .cookie("access_token", token, { httpOnly: true })
         .status(200)
-        .json(savedUser._doc);
+        .json(saved._doc);
     }
-    console.log("cookie sent");
   } catch (error) {
     next(error);
   }
